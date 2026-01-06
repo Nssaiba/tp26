@@ -1,1 +1,2 @@
-TP26 N
+TP26 
+Microservice observable & résilient avec MySQL + Actuator + Profiles + Wait Strategy + Resilience4j + Multi-instances
