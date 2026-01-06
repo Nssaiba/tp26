@@ -2,10 +2,10 @@ services:
   mysql:
     image: mysql:8.4
     environment:
-      MYSQL_DATABASE: bookdb
-      MYSQL_USER: bookuser
-      MYSQL_PASSWORD: bookpass
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: library_catalog_db
+      MYSQL_USER: lib_app_user
+      MYSQL_PASSWORD: secure_lib_pass
+      MYSQL_ROOT_PASSWORD: system_root_pass
     ports:
       - "3307:3306"
     volumes:
@@ -16,7 +16,7 @@ services:
       timeout: 3s
       retries: 20
 
-  pricing-service:
+  pricing-engine:
     build: ./pricing-service
     ports:
       - "8082:8082"
@@ -26,7 +26,7 @@ services:
       timeout: 3s
       retries: 20
 
-  book-service-1:
+  book-inventory-1:
     build: ./book-service
     environment:
       SPRING_PROFILES_ACTIVE: docker
@@ -35,7 +35,7 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-      pricing-service:
+      pricing-engine:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:8081/actuator/health || exit 1"]
@@ -43,7 +43,7 @@ services:
       timeout: 3s
       retries: 20
 
-  book-service-2:
+  book-inventory-2:
     build: ./book-service
     environment:
       SPRING_PROFILES_ACTIVE: docker
@@ -52,10 +52,10 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-      pricing-service:
+      pricing-engine:
         condition: service_healthy
 
-  book-service-3:
+  book-inventory-3:
     build: ./book-service
     environment:
       SPRING_PROFILES_ACTIVE: docker
@@ -64,7 +64,7 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-      pricing-service:
+      pricing-engine:
         condition: service_healthy
 
 volumes:
